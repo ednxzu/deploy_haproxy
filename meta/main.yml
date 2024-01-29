@@ -1,0 +1,23 @@
+---
+# meta file for deploy_haproxy
+galaxy_info:
+  namespace: 'ednxzu'
+  role_name: 'deploy_haproxy'
+  author: 'Bertrand Lanson'
+  description: ''
+  license: 'license (BSD, MIT)'
+  min_ansible_version: '2.10'
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+  galaxy_tags:
+    - 'ubuntu'
+    - 'debian'
+
+dependencies: []
