@@ -1,2 +1,7 @@
 ---
 # task/main file for deploy_haproxy
+- name: "Import prerequisites.yml"
+  ansible.builtin.include_tasks: prerequisites.yml
+
+- name: "Import install_host.yml"
+  ansible.builtin.include_tasks: install_host.yml

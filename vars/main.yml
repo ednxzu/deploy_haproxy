@@ -1,2 +1,35 @@
 ---
 # vars file for deploy_haproxy
+deploy_haproxy_config_dir: /etc/haproxy
+deploy_haproxy_socket: /var/lib/haproxy/stats
+deploy_haproxy_chroot: /var/lib/haproxy
+deploy_haproxy_user: haproxy
+deploy_haproxy_group: haproxy
+deploy_haproxy_version_map:
+  latest: "2.9"
+
+deploy_haproxy_repository:
+  debian:
+    - name: haproxy
+      uri: "http://haproxy.debian.net"
+      comments: "haproxy repository"
+      types:
+        - deb
+      suites:
+        - "{{ ansible_distribution_release }}-backports-{{ deploy_haproxy_version_map[deploy_haproxy_version] | default(deploy_haproxy_version) }}"
+      components:
+        - main
+      options:
+        Signed-By: "https://haproxy.debian.net/bernat.debian.org.gpg"
+  ubuntu:
+    - name: haproxy
+      uri: "https://ppa.launchpadcontent.net/vbernat/haproxy-{{ deploy_haproxy_version_map[deploy_haproxy_version] | default(deploy_haproxy_version) }}/ubuntu/"
+      comments: "haproxy repository"
+      types:
+        - deb
+      suites:
+        - "{{ ansible_distribution_release }}"
+      components:
+        - main
+      options:
+        Signed-By: "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xcffb779aadc995e4f350a060505d97a41c61b9cd"

@@ -1,2 +1,53 @@
 ---
 # task/prerequisites file for deploy_haproxy
+- name: "Prerequisites for host installation"
+  when: deploy_haproxy_deploy_method == 'host'
+  block:
+    - name: "Create group {{ deploy_haproxy_group }}"
+      ansible.builtin.group:
+        name: "{{ deploy_haproxy_group }}"
+        state: present
+
+    - name: "Create user {{ deploy_haproxy_user }}"
+      ansible.builtin.user:
+        name: "{{ deploy_haproxy_user }}"
+        group: "{{ deploy_haproxy_group }}"
+        home: "{{ deploy_haproxy_chroot }}"
+        create_home: false
+        shell: /bin/false
+        state: present
+
+    - name: "Create directory {{ deploy_haproxy_config_dir }}"
+      ansible.builtin.file:
+        path: "{{ deploy_haproxy_config_dir }}"
+        state: directory
+        owner: "{{ deploy_haproxy_user }}"
+        group: "{{ deploy_haproxy_group }}"
+        mode: "0755"
+
+    - name: "Create directory {{ deploy_haproxy_chroot }}"
+      ansible.builtin.file:
+        path: "{{ deploy_haproxy_chroot }}"
+        state: directory
+        owner: "{{ deploy_haproxy_user }}"
+        group: "{{ deploy_haproxy_group }}"
+        mode: "0755"
+
+- name: "Prerequisites for docker installation"
+  when: deploy_haproxy_deploy_method == 'docker'
+  block:
+    - name: "Create directory {{ deploy_haproxy_config_dir }}"
+      ansible.builtin.file:
+        path: "{{ deploy_haproxy_config_dir }}"
+        state: directory
+        owner: "{{ deploy_haproxy_user }}"
+        group: "{{ deploy_haproxy_group }}"
+        mode: "0755"
+
+    - name: "Create directory {{ deploy_haproxy_chroot}}"
+      ansible.builtin.file:
+        path: "{{ deploy_haproxy_chroot }}"
+        state: directory
+        owner: "{{ deploy_haproxy_user }}"
+        group: "{{ deploy_haproxy_group }}"
+        mode: "0755"
