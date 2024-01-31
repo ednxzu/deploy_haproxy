@@ -1,0 +1,24 @@
+# {{ ansible_managed }}
+[Unit]
+Description=HAProxy Load Balancer
+Documentation=man:haproxy(1)
+Documentation=file:/usr/share/doc/haproxy/configuration.txt.gz
+ConditionFileNotEmpty={{ deploy_haproxy_config_dir }}/haproxy.cfg
+After=network-online.target rsyslog.service
+Wants=network-online.target
+
+[Service]
+EnvironmentFile=-/etc/default/{{ deploy_haproxy_service_name }}
+EnvironmentFile=-{{ deploy_haproxy_config_dir }}/haproxy.env
+BindReadOnlyPaths=/dev/log:{{ deploy_haproxy_chroot }}/dev/log
+Environment="CONFIG={{ deploy_haproxy_config_dir }}/haproxy.cfg" "PIDFILE=/run/haproxy.pid" "EXTRAOPTS=-S /run/haproxy-master.sock"
+ExecStart=/usr/sbin/haproxy -Ws -f $CONFIG -p $PIDFILE $EXTRAOPTS
+ExecReload=/usr/sbin/haproxy -Ws -f $CONFIG -c $EXTRAOPTS
+ExecReload=/bin/kill -USR2 $MAINPID
+KillMode=mixed
+Restart=always
+SuccessExitStatus=143
+Type=notify
+
+[Install]
+WantedBy=multi-user.target

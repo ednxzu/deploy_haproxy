@@ -3,16 +3,19 @@
 deploy_haproxy_deploy_method: host # deployment method, either host or docker
 deploy_haproxy_version: "2.6"
 
+deploy_haproxy_env_variables: {}
+
 # Options from the "default" config block in haproxy.cfg
 # The default values here are usually set, but you can change any of them.
 deploy_haproxy_global:
-  - log /dev/log  local0
-  - log /dev/log  local1 notice
+  - log /dev/log local0
+  - log /dev/log local1 notice
   - stats socket {{ deploy_haproxy_socket }} level admin
   - chroot {{ deploy_haproxy_chroot }}
-  - user {{ deploy_haproxy_user }}
-  - group {{ deploy_haproxy_group }}
+  # - user {{ deploy_haproxy_user }}
+  # - group {{ deploy_haproxy_group }}
   - daemon
+  - description hashistack haproxy
 
 deploy_haproxy_defaults:
   - log global
@@ -23,13 +26,36 @@ deploy_haproxy_defaults:
   - timeout client  5000
   - timeout server  5000
 
-deploy_haproxy_frontend:
+deploy_haproxy_frontends:
   - name: default
     options:
       - mode http
       - bind :80
       - default_backend default
+      - description nginx frontend
 
-deploy_haproxy_backend: []
-
-deploy_haproxy_listen: []
+deploy_haproxy_backends:
+  - name: default
+    options:
+      - option forwardfor
+      - server srv_nginx1 172.17.0.4:80
+      - server srv_nginx2 172.17.0.3:80
+deploy_haproxy_listen:
+  - name: stats
+    options:
+      - bind :9000
+      - mode http
+      - stats enable
+      - stats uri /stats
+      - stats refresh 30s
+      - stats show-desc
+      - stats show-legends
+      - stats auth admin:password
+  - name: health
+    options:
+      - bind :8000
+      - mode http
+      - option httpchk GET /health HTTP/1.1\r\nHost:\ localhost
+      - http-check expect status 200
+      - acl health_check_ok nbsrv() ge 1
+      - monitor-uri /health

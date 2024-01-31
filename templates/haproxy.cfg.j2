@@ -1,0 +1,31 @@
+# {{ ansible_managed }}
+global
+{% for option in deploy_haproxy_global %}
+  {{ option }}
+{% endfor %}
+
+defaults
+{% for option in deploy_haproxy_defaults %}
+  {{ option }}
+{% endfor %}
+
+{% for frontend in deploy_haproxy_frontends %}
+frontend {{ frontend.name }}
+{% for option in frontend.options %}
+  {{ option }}
+{% endfor %}
+{% endfor %}
+
+{% for backend in deploy_haproxy_backends %}
+backend {{ backend.name }}
+{% for option in backend.options%}
+  {{ option }}
+{% endfor %}
+{% endfor %}
+
+{% for listen in deploy_haproxy_listen %}
+listen {{ listen.name }}
+{% for option in listen.options %}
+  {{ option }}
+{% endfor %}
+{% endfor %}

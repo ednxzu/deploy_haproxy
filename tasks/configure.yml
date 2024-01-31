@@ -1,0 +1,23 @@
+---
+# task/configure file for deploy_haproxy
+- name: "Configure for host installation"
+  when: deploy_haproxy_deploy_method == 'host'
+  block:
+    - name: "Create haproxy.env"
+      ansible.builtin.template:
+        src: haproxy.env.j2
+        dest: "{{ deploy_haproxy_config_dir }}/haproxy.env"
+        owner: "{{ deploy_haproxy_user }}"
+        group: "{{ deploy_haproxy_group }}"
+        mode: "0600"
+
+- name: "Copy haproxy.cfg template"
+  ansible.builtin.template:
+    src: haproxy.cfg.j2
+    dest: "{{ deploy_haproxy_config_dir }}/haproxy.cfg"
+    owner: "{{ deploy_haproxy_user }}"
+    group: "{{ deploy_haproxy_group }}"
+    mode: "0600"
+  notify:
+    - "systemctl-enable-haproxy"
+    - "systemctl-restart-haproxy"

@@ -5,3 +5,6 @@
 
 - name: "Import install_host.yml"
   ansible.builtin.include_tasks: install_host.yml
+
+- name: "Import configure.yml"
+  ansible.builtin.include_tasks: configure.yml

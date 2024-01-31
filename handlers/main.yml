@@ -1,2 +1,19 @@
 ---
 # handlers file for deploy_haproxy
+- name: "Reload systemd file"
+  ansible.builtin.systemd:
+    daemon_reload: true
+  listen: "systemctl-daemon-reload"
+
+- name: "Enable haproxy service"
+  ansible.builtin.service:
+    name: "{{ deploy_haproxy_service_name }}"
+    enabled: true
+  listen: "systemctl-enable-haproxy"
+
+- name: "Start haproxy service"
+  ansible.builtin.service:
+    name: "{{ deploy_haproxy_service_name }}"
+    state: restarted
+  listen: "systemctl-restart-haproxy"
+  throttle: 1
