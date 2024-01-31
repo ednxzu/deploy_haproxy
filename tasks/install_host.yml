@@ -7,3 +7,29 @@
     manage_repositories_enable_default_repo: false
     manage_repositories_enable_custom_repo: true
     manage_repositories_custom_repo: "{{ deploy_haproxy_repository[ansible_distribution|lower] }}"
+
+- name: "Get service haproxy"
+  ansible.builtin.service_facts:
+
+- name: "Install from repostories"
+  throttle: 1
+  block:
+    - name: "Install haproxy version: {{ deploy_haproxy_version }}"
+      ansible.builtin.apt:
+        update_cache: yes
+        name: "haproxy{{ '='~deploy_haproxy_version~'*' if deploy_haproxy_version != 'latest' }}"
+        state: "{{ 'present' if deploy_haproxy_version != 'latest' else deploy_haproxy_version}}"
+        allow_downgrade: true
+        cache_valid_time: 3600
+
+    - name: "Ensure haproxy is running"
+      ansible.builtin.service:
+        name: "{{ deploy_haproxy_service_name }}"
+        state: started
+      register: _haproxy_service_health
+      until: _haproxy_service_health.status.ActiveState == "active"
+      retries: 15
+      delay: 2
+      when:
+        ansible_facts.services[deploy_haproxy_service_name~'.service'] is defined
+        and ansible_facts.services[deploy_haproxy_service_name~'.service']['state'] == 'running'

@@ -5,6 +5,8 @@ deploy_haproxy_socket: /var/lib/haproxy/stats
 deploy_haproxy_chroot: /var/lib/haproxy
 deploy_haproxy_user: haproxy
 deploy_haproxy_group: haproxy
+deploy_haproxy_service_name: "haproxy{{ '_container' if deploy_haproxy_deploy_method == 'docker' }}"
+deploy_haproxy_docker_image: haproxy
 deploy_haproxy_version_map:
   latest: "2.9"
 

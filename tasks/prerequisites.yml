@@ -15,6 +15,7 @@
         home: "{{ deploy_haproxy_chroot }}"
         create_home: false
         shell: /bin/false
+        system: true
         state: present
 
     - name: "Create directory {{ deploy_haproxy_config_dir }}"
