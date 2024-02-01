@@ -5,6 +5,10 @@ deploy_haproxy_version: "2.6"
 
 deploy_haproxy_env_variables: {}
 
+# docker-only options
+deploy_haproxy_container_expose_ports: []
+deploy_haproxy_extra_container_volumes: []
+
 # Options from the "default" config block in haproxy.cfg
 # The default values here are usually set, but you can change any of them.
 deploy_haproxy_global:
@@ -12,8 +16,6 @@ deploy_haproxy_global:
   - log /dev/log local1 notice
   - stats socket {{ deploy_haproxy_socket }} level admin
   - chroot {{ deploy_haproxy_chroot }}
-  # - user {{ deploy_haproxy_user }}
-  # - group {{ deploy_haproxy_group }}
   - daemon
   - description hashistack haproxy
 
@@ -29,17 +31,20 @@ deploy_haproxy_defaults:
 deploy_haproxy_frontends:
   - name: default
     options:
+      - description default frontend
       - mode http
       - bind :80
       - default_backend default
-      - description nginx frontend
 
 deploy_haproxy_backends:
   - name: default
     options:
+      - description default backend
       - option forwardfor
-      - server srv_nginx1 172.17.0.4:80
-      - server srv_nginx2 172.17.0.3:80
+      - option httpchk
+      - http-check send meth GET uri /
+      - server srv_nginx1 172.17.0.4:80 check inter 5s
+      - server srv_nginx2 172.17.0.3:80 check inter 5s
 deploy_haproxy_listen:
   - name: stats
     options:
@@ -55,7 +60,8 @@ deploy_haproxy_listen:
     options:
       - bind :8000
       - mode http
-      - option httpchk GET /health HTTP/1.1\r\nHost:\ localhost
+      - option httpchk
+      - http-check send meth GET uri /health ver HTTP/1.1 hdr Host localhost
       - http-check expect status 200
       - acl health_check_ok nbsrv() ge 1
       - monitor-uri /health
