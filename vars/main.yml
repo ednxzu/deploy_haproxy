@@ -3,12 +3,15 @@
 deploy_haproxy_config_dir: /etc/haproxy
 deploy_haproxy_socket: /var/lib/haproxy/stats
 deploy_haproxy_chroot: /var/lib/haproxy
-deploy_haproxy_user: haproxy
-deploy_haproxy_group: haproxy
+deploy_haproxy_user: "{{ '99' if deploy_haproxy_deploy_method == 'docker' else 'haproxy' }}"
+deploy_haproxy_group: "{{ '99' if deploy_haproxy_deploy_method == 'docker' else 'haproxy' }}"
 deploy_haproxy_service_name: "haproxy{{ '_container' if deploy_haproxy_deploy_method == 'docker' }}"
-deploy_haproxy_docker_image: haproxy
+deploy_haproxy_docker_image: haproxytech/haproxy-debian
 deploy_haproxy_version_map:
   latest: "2.9"
+deploy_haproxy_container_volume_map:
+  - "{{ deploy_haproxy_config_dir }}:/usr/local/etc/haproxy"
+  # - "{{ deploy_haproxy_chroot }}:{{ deploy_haproxy_chroot }}"
 
 deploy_haproxy_repository:
   debian:

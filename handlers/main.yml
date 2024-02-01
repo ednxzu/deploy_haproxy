@@ -17,3 +17,4 @@
     state: restarted
   listen: "systemctl-restart-haproxy"
   throttle: 1
+  when: deploy_haproxy_start_service

@@ -2,18 +2,18 @@
 # task/install_docker file for deploy_haproxy
 - name: "Update container volume list"
   ansible.builtin.set_fact:
-    hashi_consul_container_volume_map: "{{ hashi_consul_container_volume_map + hashi_consul_extra_container_volumes }}"
+    deploy_haproxy_container_volume_map: "{{ deploy_haproxy_container_volume_map + deploy_haproxy_extra_container_volumes }}"
 
 - name: "Include ednxzu.docker_systemd_service"
   ansible.builtin.include_role:
     name: ednxzu.docker_systemd_service
   vars:
-    docker_systemd_service_container_name: "consul"
-    docker_systemd_service_image: "{{ hashi_consul_docker_image }}:{{ hashi_consul_version }}"
-    docker_systemd_service_container_env: "{{ hashi_consul_env_variables }}"
+    docker_systemd_service_container_name: "haproxy"
+    docker_systemd_service_image: "{{ deploy_haproxy_docker_image }}:{{ deploy_haproxy_version }}"
+    docker_systemd_service_container_env: "{{ deploy_haproxy_env_variables }}"
     docker_systemd_service_flags:
       - network: host
-      - volume: "{{ hashi_consul_container_volume_map }}"
+      - volume: "{{ deploy_haproxy_container_volume_map }}"
     docker_systemd_service_name: "{{ docker_systemd_service_container_name }}_container"
-    docker_systemd_service_state: "{{ 'started' if hashi_consul_start_service else 'stopped'}}"
-    docker_systemd_service_restart: "{{ true if hashi_consul_start_service else false}}"
+    docker_systemd_service_state: "{{ 'started' if deploy_haproxy_start_service else 'stopped'}}"
+    docker_systemd_service_restart: "{{ true if deploy_haproxy_start_service else false}}"

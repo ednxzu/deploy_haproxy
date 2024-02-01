@@ -1,7 +1,6 @@
 ---
-# defaults file for deploy_haproxy
-deploy_haproxy_deploy_method: host # deployment method, either host or docker
-deploy_haproxy_version: latest
+deploy_haproxy_deploy_method: docker # deployment method, either host or docker
+deploy_haproxy_version: "2.8"
 
 deploy_haproxy_env_variables: {}
 deploy_haproxy_start_service: true
@@ -29,24 +28,22 @@ deploy_haproxy_defaults:
   - timeout server  5000
 
 deploy_haproxy_frontends:
-  []
-  # - name: default
-  #   options:
-  #     - description default frontend
-  #     - mode http
-  #     - bind :80
-  #     - default_backend default
+  - name: default
+    options:
+      - description default frontend
+      - mode http
+      - bind :1024
+      - default_backend default
 
 deploy_haproxy_backends:
-  []
-  # - name: default
-  #   options:
-  #     - description default backend
-  #     - option forwardfor
-  #     - option httpchk
-  #     - http-check send meth GET uri /
-  #     - server srv_nginx1 172.17.0.4:80 check inter 5s
-  #     - server srv_nginx2 172.17.0.3:80 check inter 5s
+  - name: default
+    options:
+      - description default backend
+      - option forwardfor
+      - option httpchk
+      - http-check send meth GET uri /
+      - server srv_nginx1 172.17.0.3:80 check inter 5s
+      - server srv_nginx2 172.17.0.2:80 check inter 5s
 
 # listen configuration blocks
 # the default values expose a monitoring listener on all interfaces on port 9000
