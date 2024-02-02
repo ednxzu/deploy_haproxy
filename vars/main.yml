@@ -12,7 +12,7 @@ deploy_haproxy_version_map:
   latest: "2.9"
 deploy_haproxy_container_volume_map:
   - "{{ deploy_haproxy_config_dir }}:/usr/local/etc/haproxy"
-  # - "{{ deploy_haproxy_chroot }}:{{ deploy_haproxy_chroot }}"
+  - "{{ deploy_haproxy_chroot }}:{{ deploy_haproxy_chroot }}"
 
 deploy_haproxy_repository:
   debian:

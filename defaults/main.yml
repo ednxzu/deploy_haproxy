@@ -71,4 +71,3 @@ deploy_haproxy_listen:
       - acl health_check_ok nbsrv() ge 1
       - monitor-uri /health
       - http-request use-service prometheus-exporter if { path /metrics }
-      - 'http-response return 200 ''{"status": "ok"}'' if { path /health }'

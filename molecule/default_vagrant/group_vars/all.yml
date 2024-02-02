@@ -11,8 +11,7 @@ deploy_haproxy_extra_container_volumes: []
 # Options from the "default" config block in haproxy.cfg
 # The default values here are usually set, but you can change any of them.
 deploy_haproxy_global:
-  - log /dev/log local0
-  - log /dev/log local1 notice
+  - log stdout format raw daemon debug
   - stats socket {{ deploy_haproxy_socket }} level admin
   - chroot {{ deploy_haproxy_chroot }}
   - daemon

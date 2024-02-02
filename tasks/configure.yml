@@ -36,7 +36,7 @@
     - name: "Copy TLS certificates"
       ansible.builtin.template:
         src: "{{ item }}"
-        dest: "{{ deploy_haproxy_cert_dir_dst }}/{{ (item | basename).split('.')[:-1] | join('.')}}"
+        dest: "{{ deploy_haproxy_cert_dir_dst }}/{{ (item | basename) }}"
         owner: "{{ deploy_haproxy_user }}"
         group: "{{ deploy_haproxy_group }}"
         mode: "0600"

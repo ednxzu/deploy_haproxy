@@ -17,17 +17,17 @@
           ansible.builtin.file:
             path: "/tmp/haproxy-cert"
             state: directory
-            owner: "root"
-            group: "root"
+            owner: "1000"
+            group: "1000"
             mode: "0777"
 
         - name: "Create private key"
           community.crypto.openssl_privatekey:
-            path: /tmp/haproxy-cert.key
+            path: /tmp/haproxy-cert/cert.pem.key
 
         - name: "Create certificate signing request"
           community.crypto.openssl_csr_pipe:
-            privatekey_path: /tmp/haproxy-cert.key
+            privatekey_path: /tmp/haproxy-cert/cert.pem.key
             common_name: haproxy.ansible.test
             organization_name: Ansible, Inc.
           register: csr
@@ -36,5 +36,5 @@
           community.crypto.x509_certificate:
             path: /tmp/haproxy-cert/cert.pem
             csr_content: "{{ csr.csr }}"
-            privatekey_path: /tmp/haproxy-cert.key
+            privatekey_path: /tmp/haproxy-cert/cert.pem.key
             provider: selfsigned
