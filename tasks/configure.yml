@@ -21,3 +21,24 @@
   notify:
     - "systemctl-enable-haproxy"
     - "systemctl-restart-haproxy"
+
+- name: "Configure haproxy for TLS"
+  when: not deploy_haproxy_cert_dir == ''
+  block:
+    - name: "Create directory {{ deploy_haproxy_cert_dir_dst }}"
+      ansible.builtin.file:
+        path: "{{ deploy_haproxy_cert_dir_dst }}"
+        state: directory
+        owner: "{{ deploy_haproxy_user }}"
+        group: "{{ deploy_haproxy_group }}"
+        mode: "0755"
+
+    - name: "Copy TLS certificates"
+      ansible.builtin.template:
+        src: "{{ item }}"
+        dest: "{{ deploy_haproxy_cert_dir_dst }}/{{ (item | basename).split('.')[:-1] | join('.')}}"
+        owner: "{{ deploy_haproxy_user }}"
+        group: "{{ deploy_haproxy_group }}"
+        mode: "0600"
+      with_fileglob:
+        - "{{ deploy_haproxy_cert_dir }}/*"

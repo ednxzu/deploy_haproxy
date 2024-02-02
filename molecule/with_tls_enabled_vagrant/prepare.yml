@@ -1,0 +1,40 @@
+---
+- name: Prepare
+  hosts: all
+  become: true
+  tasks:
+    - name: "Include ednxzu.install_docker"
+      ansible.builtin.include_role:
+        name: ednxzu.install_docker
+      vars:
+        install_docker_python_packages: true
+
+    - name: "Generate self-signed certificates"  # noqa: run-once[task]
+      delegate_to: localhost
+      run_once: true
+      block:
+        - name: "Create temporary cert directory /tmp/haproxy-cert"
+          ansible.builtin.file:
+            path: "/tmp/haproxy-cert"
+            state: directory
+            owner: "root"
+            group: "root"
+            mode: "0777"
+
+        - name: "Create private key"
+          community.crypto.openssl_privatekey:
+            path: /tmp/haproxy-cert.key
+
+        - name: "Create certificate signing request"
+          community.crypto.openssl_csr_pipe:
+            privatekey_path: /tmp/haproxy-cert.key
+            common_name: haproxy.ansible.test
+            organization_name: Ansible, Inc.
+          register: csr
+
+        - name: "Create self-signed certificate from CSR"
+          community.crypto.x509_certificate:
+            path: /tmp/haproxy-cert/cert.pem
+            csr_content: "{{ csr.csr }}"
+            privatekey_path: /tmp/haproxy-cert.key
+            provider: selfsigned

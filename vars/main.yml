@@ -1,8 +1,9 @@
 ---
 # vars file for deploy_haproxy
 deploy_haproxy_config_dir: /etc/haproxy
-deploy_haproxy_socket: /var/lib/haproxy/stats
 deploy_haproxy_chroot: /var/lib/haproxy
+deploy_haproxy_socket: "{{ deploy_haproxy_chroot }}/stats"
+deploy_haproxy_cert_dir_dst: "{{ deploy_haproxy_chroot }}/certs"
 deploy_haproxy_user: "{{ '99' if deploy_haproxy_deploy_method == 'docker' else 'haproxy' }}"
 deploy_haproxy_group: "{{ '99' if deploy_haproxy_deploy_method == 'docker' else 'haproxy' }}"
 deploy_haproxy_service_name: "haproxy{{ '_container' if deploy_haproxy_deploy_method == 'docker' }}"
