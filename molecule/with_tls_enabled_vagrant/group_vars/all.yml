@@ -1,16 +1,10 @@
 ---
 deploy_haproxy_deploy_method: docker # deployment method, either host or docker
 deploy_haproxy_version: "2.8"
-
 deploy_haproxy_env_variables: {}
 deploy_haproxy_start_service: true
 deploy_haproxy_cert_dir: "/tmp/haproxy-cert"
-
-# docker-only options
 deploy_haproxy_extra_container_volumes: []
-
-# Options from the "default" config block in haproxy.cfg
-# The default values here are usually set, but you can change any of them.
 deploy_haproxy_global:
   - log stdout format raw daemon debug
   - stats socket {{ deploy_haproxy_socket }} level admin
@@ -27,29 +21,8 @@ deploy_haproxy_defaults:
   - timeout client  5000
   - timeout server  5000
 
-deploy_haproxy_frontends:
-  - name: default
-    options:
-      - description default frontend
-      - mode http
-      - bind :1024
-      - default_backend default
-
-deploy_haproxy_backends:
-  - name: default
-    options:
-      - description default backend
-      - option forwardfor
-      - option httpchk
-      - http-check send meth GET uri /
-      - server srv_nginx1 172.17.0.2:80 check inter 5s
-      - server srv_nginx2 172.17.0.3:80 check inter 5s
-
-# listen configuration blocks
-# the default values expose a monitoring listener on all interfaces on port 9000
-# /stats returns the haproxy dashboard (please change the user and password in the configuration)
-# /health returns a 200 OK response as long as haproxy is alive and well
-# /metrics returns prometheus metrics for the haproxy instance
+deploy_haproxy_frontends: []
+deploy_haproxy_backends: []
 deploy_haproxy_listen:
   - name: monitoring
     options:

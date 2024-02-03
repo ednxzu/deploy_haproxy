@@ -152,23 +152,26 @@
       block:
         - name: "Get haproxy /health"
           ansible.builtin.uri:
-            url: "http://127.0.0.1:9000/health"
+            url: "https://127.0.0.1:9000/health"
             method: GET
+            validate_certs: false
           register: haproxy_health_endpoint
 
         - name: "Get haproxy /stats"
           ansible.builtin.uri:
-            url: "http://127.0.0.1:9000/stats"
+            url: "https://127.0.0.1:9000/stats"
             method: GET
             force_basic_auth: true
             url_username: admin
             url_password: password
+            validate_certs: false
           register: haproxy_stats_endpoint
 
         - name: "Get haproxy /metrics"
           ansible.builtin.uri:
-            url: "http://127.0.0.1:9000/metrics"
+            url: "https://127.0.0.1:9000/metrics"
             method: GET
+            validate_certs: false
           register: haproxy_metrics_endpoint
 
         - name: "Verify haproxy endpoints"

@@ -6,12 +6,7 @@ deploy_haproxy_version: latest
 deploy_haproxy_env_variables: {}
 deploy_haproxy_start_service: true
 deploy_haproxy_cert_dir: ""
-
-# docker-only options
 deploy_haproxy_extra_container_volumes: []
-
-# Options from the "default" config block in haproxy.cfg
-# The default values here are usually set, but you can change any of them.
 deploy_haproxy_global:
   - log /dev/log local0
   - log /dev/log local1 notice
@@ -49,11 +44,6 @@ deploy_haproxy_backends:
   #     - server srv_nginx1 172.17.0.4:80 check inter 5s
   #     - server srv_nginx2 172.17.0.3:80 check inter 5s
 
-# listen configuration blocks
-# the default values expose a monitoring listener on all interfaces on port 9000
-# /stats returns the haproxy dashboard (please change the user and password in the configuration)
-# /health returns a 200 OK response as long as haproxy is alive and well
-# /metrics returns prometheus metrics for the haproxy instance
 deploy_haproxy_listen:
   - name: monitoring
     options:

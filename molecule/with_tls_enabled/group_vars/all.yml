@@ -1,12 +1,13 @@
 ---
-deploy_haproxy_deploy_method: docker # deployment method, either host or docker
-deploy_haproxy_version: latest
+deploy_haproxy_deploy_method: host # deployment method, either host or docker
+deploy_haproxy_version: "2.8"
 deploy_haproxy_env_variables: {}
 deploy_haproxy_start_service: true
-deploy_haproxy_cert_dir: ""
+deploy_haproxy_cert_dir: "/tmp/haproxy-cert"
 deploy_haproxy_extra_container_volumes: []
 deploy_haproxy_global:
-  - log stdout format raw daemon debug
+  - log /dev/log local0
+  - log /dev/log local1 notice
   - stats socket {{ deploy_haproxy_socket }} level admin
   - chroot {{ deploy_haproxy_chroot }}
   - daemon
@@ -22,13 +23,11 @@ deploy_haproxy_defaults:
   - timeout server  5000
 
 deploy_haproxy_frontends: []
-
 deploy_haproxy_backends: []
-
 deploy_haproxy_listen:
   - name: monitoring
     options:
-      - bind :9000
+      - bind :9000 ssl crt /var/lib/haproxy/certs/cert.pem
       - mode http
       - option httpchk
       - stats enable
