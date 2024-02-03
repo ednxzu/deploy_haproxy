@@ -72,26 +72,26 @@
 
     - name: "Test: directory /var/lib/haproxy"
       block:
-      - name: "Stat directory /var/lib/haproxy"
-        ansible.builtin.stat:
-          path: "/var/lib/haproxy"
-        register: stat_var_lib_haproxy
+        - name: "Stat directory /var/lib/haproxy"
+          ansible.builtin.stat:
+            path: "/var/lib/haproxy"
+          register: stat_var_lib_haproxy
 
-      - name: "Stat socket /var/lib/haproxy/stats"
-        ansible.builtin.stat:
-          path: "/var/lib/haproxy/stats"
-        register: stat_var_lib_haproxy_stats
+        - name: "Stat socket /var/lib/haproxy/stats"
+          ansible.builtin.stat:
+            path: "/var/lib/haproxy/stats"
+          register: stat_var_lib_haproxy_stats
 
-      - name: "Verify directory /var/lib/haproxy"
-        ansible.builtin.assert:
-          that:
-            - stat_var_lib_haproxy.stat.exists
-            - stat_var_lib_haproxy.stat.isdir
-            - stat_var_lib_haproxy.stat.pw_name == 'haproxy'
-            - stat_var_lib_haproxy.stat.gr_name == 'haproxy'
-            - stat_var_lib_haproxy.stat.mode == '0755'
-            - stat_var_lib_haproxy_stats.stat.exists
-            - stat_var_lib_haproxy_stats.stat.issock
+        - name: "Verify directory /var/lib/haproxy"
+          ansible.builtin.assert:
+            that:
+              - stat_var_lib_haproxy.stat.exists
+              - stat_var_lib_haproxy.stat.isdir
+              - stat_var_lib_haproxy.stat.pw_name == 'haproxy'
+              - stat_var_lib_haproxy.stat.gr_name == 'haproxy'
+              - stat_var_lib_haproxy.stat.mode == '0755'
+              - stat_var_lib_haproxy_stats.stat.exists
+              - stat_var_lib_haproxy_stats.stat.issock
 
     - name: "Test: service haproxy"
       block:
