@@ -29,7 +29,7 @@ Example Playbook
 # calling the role inside a playbook with either the default or group_vars/host_vars
 - hosts: servers
   roles:
-    - ednxzu.deploy_haproxy
+    - ednz_cloud.deploy_haproxy
 ```
 
 License
