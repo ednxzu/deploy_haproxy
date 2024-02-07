@@ -128,7 +128,7 @@ This variable lets you specify multiple `listen` blocks within the `haproxy.cfg`
 Dependencies
 ------------
 
-`ednxzu.docker_systemd_service` if installing haproxy in a container.
+`ednz_cloud.docker_systemd_service` if installing haproxy in a container.
 
 Example Playbook
 ----------------

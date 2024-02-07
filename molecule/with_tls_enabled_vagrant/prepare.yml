@@ -3,13 +3,13 @@
   hosts: all
   become: true
   tasks:
-    - name: "Include ednxzu.install_docker"
+    - name: "Include ednz_cloud.install_docker"
       ansible.builtin.include_role:
-        name: ednxzu.install_docker
+        name: ednz_cloud.install_docker
       vars:
         install_docker_python_packages: true
 
-    - name: "Generate self-signed certificates"  # noqa: run-once[task]
+    - name: "Generate self-signed certificates" # noqa: run-once[task]
       delegate_to: localhost
       run_once: true
       block:

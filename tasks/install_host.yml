@@ -2,7 +2,7 @@
 # task/install_host file for deploy_haproxy
 - name: "Configure haproxy repository"
   ansible.builtin.include_role:
-    name: ednxzu.manage_repositories
+    name: ednz_cloud.manage_repositories
   vars:
     manage_repositories_enable_default_repo: false
     manage_repositories_enable_custom_repo: true
