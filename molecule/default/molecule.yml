@@ -7,7 +7,7 @@ driver:
   name: docker
 platforms:
   - name: instance
-    image: geerlingguy/docker-${MOLECULE_TEST_OS}-ansible
+    image: ednxzu/molecule:${MOLECULE_TEST_OS}
     command: ""
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup
